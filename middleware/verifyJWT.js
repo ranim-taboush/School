@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../Models/adminModel')
 
 const authenticate = async (req, res, next) => {
-    // const authToken = req.headers.authorization ||req.headers.Authorization;
     const authToken = req.cookies?.accessToken;
     if (!authToken) {
         return res.status(401).json({ message: "No token provided, access denied" });
