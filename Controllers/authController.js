@@ -6,7 +6,7 @@ const register = async function (req, res, next) {
     const { username, email, password } = req.body
     try {
         if (!username || !email || !password) {
-            throw new Error('name, email and password are required')
+            throw new Error('username, email and password are required')
         }
         const existingUser = await Admin.findOne({ email: req.body.email });
         if (existingUser) throw new Error('User already exists');
@@ -20,12 +20,10 @@ const register = async function (req, res, next) {
         res.status(200).json(newUser)
     } catch (e) {
         console.log(e)
-        return res.status(400).json({ message: 'has an error' })
+        return res.status(400).json({ message: e.message || 'has an error' })
     }
 }
 
-
-// Login
 const login = async (req, res, next) => {
     try {
         const user = await Admin.findOne({ email: req.body.email });
@@ -41,7 +39,7 @@ const login = async (req, res, next) => {
                 id: user._id,
                 role: user.role
             },
-            "secretKey"
+            process.env.JWT_SECRET_KEY
         );
         const { password, ...info } = user._doc;
         res
@@ -54,7 +52,6 @@ const login = async (req, res, next) => {
         next(err);
     }
 };
-
 
 const logout = async function (req, res) {
     res
