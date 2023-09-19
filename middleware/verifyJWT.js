@@ -3,7 +3,6 @@ const Admin = require('./../Models/authModel')
 
 const authenticate = async (req, res, next) => {
     const token = req.cookies?.accessToken;
-    console.log(token)
     if (!token) {
         return res.status(401).json({ message: "No token provided, access denied" });
     }

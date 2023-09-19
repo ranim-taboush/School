@@ -13,6 +13,7 @@ const gradeRoute = require('./../Routes/gradeRoute')
 const semesterRoute = require('./../Routes/semesterRoute')
 const subjectRoute = require('./../Routes/subjectRoute')
 const chapterRoute = require('./../Routes/chapterRoute')
+const fileRoute = require('./../Routes/fileRouter')
 
 mongoose.set('strictQuery', true);
 const PORT = process.env.PORT || 5000;
@@ -25,7 +26,9 @@ app.use("/", gradeRoute)
 app.use("/", semesterRoute)
 app.use("/", subjectRoute)
 app.use("/", chapterRoute)
+app.use("/file", fileRoute)
 app.use('/auth', authRoute)
+app.use("/uploads", express.static("uploads"));
 
 mongoose.connection.once("open", () => {
     console.log("Connected to DB");
