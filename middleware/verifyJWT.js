@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const Admin = require('../Models/adminModel')
+const Admin = require('./../Models/authModel')
 
 const authenticate = async (req, res, next) => {
-    const authToken = req.cookies?.accessToken;
-    if (!authToken) {
+    const token = req.cookies?.accessToken;
+    console.log(token)
+    if (!token) {
         return res.status(401).json({ message: "No token provided, access denied" });
     }
     try {
-        const token = authToken.split(" ")[1];
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET_KEY);
         const user = await Admin.findOne({ _id: decodedPayload.id, token })
         if (!user) {
