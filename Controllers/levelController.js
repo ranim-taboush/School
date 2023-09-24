@@ -13,7 +13,21 @@ const createLevel = async (req, res) => {
 }
 
 const getLevels = async (req, res) => {
-    Level.find({}).populate({ path: "grades" })
+    Level.find({}).populate({
+        path: 'grades',
+        populate: {
+            path: 'semesters',
+            model: 'Semester',
+            populate: {
+                path: 'subjects',
+                model: 'Subject',
+                populate: {
+                    path: 'chapters',
+                    model: 'Chapter'
+                }
+            }
+        }
+    })
         .then((levels) => res.status(200).json(levels))
         .catch(e => res.status(500).json({ message: e.message }))
 }
@@ -21,7 +35,21 @@ const getLevels = async (req, res) => {
 const getLevel = async (req, res) => {
     const _id = req.params.id.toString().trim();
     if (!_id) { res.status(400).json({ message: "id is required" }); return; }
-    await Level.findById(_id).populate({ path: "grades" })
+    await Level.findById(_id).populate({
+        path: 'grades',
+        populate: {
+            path: 'semesters',
+            model: 'Semester',
+            populate: {
+                path: 'subjects',
+                model: 'Subject',
+                populate: {
+                    path: 'chapters',
+                    model: 'Chapter'
+                }
+            }
+        }
+    })
         .then(lvl => res.status(200).json(lvl))
         .catch(e => res.status(500).json({ message: e.message }))
 }
