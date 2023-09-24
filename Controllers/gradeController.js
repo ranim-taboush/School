@@ -25,7 +25,17 @@ const createGrade = async (req, res) => {
 }
 
 const getGrades = async (req, res) => {
-    Grade.find({}).populate({ path: "semesters" })
+    Grade.find({}).populate({
+      path: 'semesters',
+      populate: {
+        path: 'subjects',
+        model: 'Subject',
+            populate: {
+            path: 'chapters',
+            model: 'Chapter'
+            }
+      }
+    }).exec()
         .then((grades) => res.status(200).json(grades))
         .catch(e => res.status(500).json({ message: e.message }))
 }
@@ -33,7 +43,17 @@ const getGrades = async (req, res) => {
 const getGrade = async (req, res) => {
     const _id = req.params.id.toString().trim();
     if (!_id) { res.status(400).json({ message: "id is required" }); return; }
-    await Grade.findById(_id).populate({ path: "semesters" })
+    await Grade.findById(_id).populate({
+      path: 'semesters',
+      populate: {
+        path: 'subjects',
+        model: 'Subject',
+            populate: {
+            path: 'chapters',
+            model: 'Chapter'
+            }
+      }
+    }).exec()
         .then(grd => res.status(200).json(grd))
         .catch(e => res.status(500).json({ message: e.message }))
 }

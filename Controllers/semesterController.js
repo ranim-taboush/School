@@ -25,7 +25,13 @@ const createSemester = async (req, res) => {
 }
 
 const getSemesters = async (req, res) => {
-    Semester.find({}).populate({ path: "subjects" })
+    Semester.find({}).populate({
+      path: 'subjects',
+      populate: {
+        path: 'chapters',
+        model: 'Chapter'
+      }
+    }).exec()
         .then((semesters) => res.status(200).json(semesters))
         .catch(e => res.status(500).json({ message: e.message }))
 }
@@ -33,7 +39,13 @@ const getSemesters = async (req, res) => {
 const getSemester = async (req, res) => {
     const _id = req.params.id.toString().trim();
     if (!_id) { res.status(400).json({ message: "id is required" }); return; }
-    await Semester.findById(_id).populate({ path: "subjects" })
+    await Semester.findById(_id).populate({
+      path: 'subjects',
+      populate: {
+        path: 'chapters',
+        model: 'Chapter'
+      }
+    }).exec()
         .then(smstr => res.status(200).json(smstr))
         .catch(e => res.status(500).json({ message: e.message }))
 }
